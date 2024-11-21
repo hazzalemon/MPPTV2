@@ -93,7 +93,7 @@ float
   voltageBatteryMin = 5.000,    //   USER PARAMETER - Minimum Battery Charging Voltage (Output V)
   loopTime = 0.0000,
   voltageDropout = 1.0000,  //  CALIB PARAMETER - Buck regulator's dropout voltage (DOV is present due to Max Duty Cycle Limit)
-  currentCharging = 7.0000,
+  currentCharging = 15.0000,
   PPWM_margin = 199.5000,         //  CALIB PARAMETER - Minimum Operating Duty Cycle for Predictive PWM (%)
   PWM_MaxDC = 10.0000,            //   USER PARAMETER - Maximum Charging Current (A - Output)
   outputDeviation = 0.0000,       // SYSTEM PARAMETER - Output Voltage Deviation (%)
@@ -160,6 +160,7 @@ void loop() {
       phaseA_trim++;
     }
   }
+  Serial.println((String)"PLoss: " + (powerInput - powerOutput));
   // Serial.println((String)"input voltage: "+ vin + ", output voltage: "+ vout + ", input current: "+ cin + ", output_current: " + cout + ", phase_A current: " + c_b + ", phase_b current: "+ c_a);
   // Serial.println((String)"duty: " + test + "in_pwr: " + in_pwr);
   // // update_display();

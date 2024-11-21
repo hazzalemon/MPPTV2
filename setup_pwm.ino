@@ -35,7 +35,7 @@ mcpwm_timer_set_resolution(MCPWM_UNIT_0, MCPWM_TIMER_1, 160000000);  //Found nec
 
 //Config structure for timers....
  mcpwm_config_t pwm_config;
-    pwm_config.frequency = 100000;    //frequency = 1000Hz
+    pwm_config.frequency = 40000;    //frequency = 1000Hz
     pwm_config.cmpr_a = 0;
     pwm_config.cmpr_b = 0;
     pwm_config.counter_mode = MCPWM_UP_COUNTER;
@@ -61,10 +61,10 @@ mcpwm_timer_set_resolution(MCPWM_UNIT_0, MCPWM_TIMER_1, 160000000);  //Found nec
   mcpwm_set_timer_sync_output(MCPWM_UNIT_0, MCPWM_TIMER_0,MCPWM_SWSYNC_SOURCE_TEZ);   //'MCPWM_SWSYNC_SOURCE_TEZ' = the sync signal is generated when Timer0 counts to zero
   mcpwm_sync_configure(MCPWM_UNIT_1, MCPWM_TIMER_1, &sync_config);
 
-  mcpwm_deadtime_enable(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_ACTIVE_HIGH_COMPLIMENT_MODE, 80, 80);
-  mcpwm_deadtime_enable(MCPWM_UNIT_0, MCPWM_TIMER_1, MCPWM_ACTIVE_HIGH_COMPLIMENT_MODE, 80, 80);
-  mcpwm_deadtime_enable(MCPWM_UNIT_1, MCPWM_TIMER_0, MCPWM_ACTIVE_HIGH_COMPLIMENT_MODE, 80, 80);
-  mcpwm_deadtime_enable(MCPWM_UNIT_1, MCPWM_TIMER_1, MCPWM_ACTIVE_HIGH_COMPLIMENT_MODE, 80, 80);
+  mcpwm_deadtime_enable(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_ACTIVE_HIGH_COMPLIMENT_MODE, 150, 150);
+  mcpwm_deadtime_enable(MCPWM_UNIT_0, MCPWM_TIMER_1, MCPWM_ACTIVE_HIGH_COMPLIMENT_MODE, 150, 150);
+  mcpwm_deadtime_enable(MCPWM_UNIT_1, MCPWM_TIMER_0, MCPWM_ACTIVE_HIGH_COMPLIMENT_MODE, 150, 150);
+  mcpwm_deadtime_enable(MCPWM_UNIT_1, MCPWM_TIMER_1, MCPWM_ACTIVE_HIGH_COMPLIMENT_MODE, 150, 150);
 
   // mcpwm_deadtime_enable(MCPWM_UNIT_1, MCPWM_TIMER_0, MCPWM_BYPASS_FED, 1000, 1000);
    

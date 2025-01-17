@@ -1,4 +1,4 @@
-
+#include <GEM_u8g2.h>
 #include <EEPROM.h>  //SYSTEM PARAMETER  - EEPROM Library (By: Arduino)
 #include "arduino.h"
 #include <Wire.h>
@@ -97,7 +97,7 @@ float
   PPWM_margin = 199.5000,         //  CALIB PARAMETER - Minimum Operating Duty Cycle for Predictive PWM (%)
   PWM_MaxDC = 10.0000,            //   USER PARAMETER - Maximum Charging Current (A - Output)
   outputDeviation = 0.0000,       // SYSTEM PARAMETER - Output Voltage Deviation (%)
-  vInSystemMin = 7.000,           //  CALIB PARAMETER -
+  vInSystemMin = 8.000,           //  CALIB PARAMETER -
   voltageBatteryThresh = 1.0000,  //  CALIB PARAMETER - Power cuts-off when this voltage is reached (Output V)
   currentOutAbsolute = 50.0000,
   currentInAbsolute = 31.0000,  //  CALIB PARAMETER - Maximum Input Current The System Can Handle (A - Input)
@@ -126,22 +126,49 @@ unsigned long
   loopTimeEnd = 0,            //SYSTEM PARAMETER - Used for the loop cycle stop watch, records the loop end time
   secondsElapsed = 0;         //SYSTEM PARAMETER -
 
-void coreTwo(void* pvParameters) {
-  setup_display();
-  while (1) {
-    update_display();
-  }
-}
+// void coreTwo(void* pvParameters) {
+//   setup_display();
+//   while (1) {
+//     update_display();
+//   }
+// }
+
+
+#define DISP_SDA 34
+#define DISP_SCL 33
+
+#include "U8g2lib.h"
+
+
+U8G2_SSD1306_128X64_NONAME_F_HW_I2C u8g2(U8G2_R2, U8X8_PIN_NONE, DISP_SCL, DISP_SDA); // [full framebuffer, size = 1024 bytes]
+
+
+GEMItem menuItemVoltMax("Max Batt volts:", voltageBatteryMax);
+GEMItem menuItemVoltMin("Min Batt volts:", voltageBatteryMin);
+GEMItem menuItemCurLim("Current Limit:", PWM_MaxDC);
+GEMItem menuItemMode("MPPT mode enable:", output_Mode);
+GEMItem menuItemWIFI("Enable WIFI:", enableWiFi);
+GEMPage menuPageMain("settings");
+void dash(); // Forward declaration
+GEMItem menuItemButton("dashboard", dash);
+
+GEM_u8g2 menu(u8g2, GEM_POINTER_ROW, GEM_ITEMS_COUNT_AUTO);
+
 void setup() {
   MCPWM_SetUP();
   Serial.begin(57600);
+  Serial.println("testing1234testing123");
+  u8g2.begin();
   setup_display();
   // xTaskCreatePinnedToCore(coreTwo,"coreTwo",10000,NULL,0,&Core2,0);
+  menu.init();
+  setupMenu();
+  menu.drawMenu();
   Wire1.begin(SDA_PIN, SCL_PIN);
   ads1015.begin(72, &Wire1);
   ads1015_B.begin(73, &Wire1);
 
-  // Serial.println("setup MCPWM!");
+  Serial.println("setup MCPWM!");
 }
 
 void loop() {
@@ -149,7 +176,10 @@ void loop() {
   // delay(100);
   Device_Protection();
   Charging_Algorithm();
-  update_display();
+  if (menu.readyForKey()) {
+    menu.registerKeyPress(pinCheck());
+  }
+  // update_display();
   Serial.println((String) "loop time: " + loopTime );
   update_count++;
   if (update_count > 10){
@@ -161,22 +191,6 @@ void loop() {
     }
   }
   Serial.println((String)"PLoss: " + (powerInput - powerOutput));
-  // Serial.println((String)"input voltage: "+ vin + ", output voltage: "+ vout + ", input current: "+ cin + ", output_current: " + cout + ", phase_A current: " + c_b + ", phase_b current: "+ c_a);
-  // Serial.println((String)"duty: " + test + "in_pwr: " + in_pwr);
-  // // update_display();
-  //   if(Serial.available()>0)
-  // {
-  //   char incomingByte = Serial.read();
-  //   test = incomingByte - '0';
-  //   Serial.println(test);
-  // }
-  // if(test > 100){
-  // Set_boost_PWM(float(200-test));
-  // }
-  // else if(test == 100){
-  //    Set_buck_PWM(float(99.9));
-  // }
-  // else{
-  //   Set_buck_PWM(float(test));
-  // }
+
+  
 }
